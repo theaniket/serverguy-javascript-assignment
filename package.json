@@ -1,0 +1,24 @@
+{
+  "name": "serverguy-assignment",
+  "version": "1.0.0",
+  "description": "javascript assignment for job",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theaniket/serverguy-javascript-assignment.git"
+  },
+  "author": "Aniket Chadha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theaniket/serverguy-javascript-assignment/issues"
+  },
+  "homepage": "https://github.com/theaniket/serverguy-javascript-assignment#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mysql": "^2.16.0",
+    "sequelize": "^4.39.0"
+  }
+}
