@@ -15,9 +15,7 @@ const user = sequelize.define('User',{
 const search = sequelize.define('Search',{
     text: Sequelize.STRING,
     createdOn: Sequelize.DATE,
-    userId: Sequelize.STRING
+    userId: Sequelize.INTEGER
 })
-
-user.belongsToMany(search, {through: 'user-search-mapping'});
 
 module.exports = sequelize;

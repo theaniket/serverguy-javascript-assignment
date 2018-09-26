@@ -1,7 +1,11 @@
 const express = require('express');
 const db = require('./database-connection');
+const bodyParser = require('body-parser');
 let app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
 db.sync()
 .then(()=>{
