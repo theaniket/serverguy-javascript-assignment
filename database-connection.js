@@ -18,4 +18,4 @@ const search = sequelize.define('Search',{
     userId: Sequelize.INTEGER
 })
 
-module.exports = sequelize;
+module.exports = {sequelize, user, search};
