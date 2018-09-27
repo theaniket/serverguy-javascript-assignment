@@ -45,13 +45,35 @@ router.post('/github', async (req,res,next)=>{
     
 })
 
-router.get('/recentfive', passport.authenticate('jwt',{session:false}), async (req,res)=>{
-    let token = getToken(req.headers);
-    if(token){
+// router.get('/recentfive', passport.authenticate('jwt',{session:false}), async (req,res)=>{
+//     passport.authenticate('jwt', {session: false},async (err, user, info) => {
+//         let token = getToken(req.headers);
+//     // let authorization = req.headers.authorization;
+//     // let decode;
+//     // decode = jwt.verify(authorization,token).then((user)=>{
+//     //         console.log(user);
+//     // });
+//     // console.log(decode);
+//     if(token){
+//         let items = [];
+//         await search.findAll({
+//             where:{
+//                 userId: user.dataValues.id
+//             },
+//             limit:5
+            
+//         }).then((result)=>{
+//             console.log(result);
+//             items = result;
+//         }).catch((err)=>{
+//             res.send({success: false, message: 'Server Error'});
+//         })
 
-    }else{
-
-    }
-})
+//         res.send({success: true, items: items});
+//     }else{
+//         res.send({success: false, message: 'Unauthorized'});
+//     }
+//     })(req, res);
+// })
 
 module.exports = router;
