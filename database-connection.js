@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('sql12258593','sql12258593','JjLKItjvWk',{
-    host: 'sql12.freemysqlhosting.net',
-    dialect: 'mysql',
-    port: 3306
+const sequelize = new Sequelize('serverguy-assignment',null,null,{
+    host: 'db4free.net',
+    dialect: 'sqlite',
+    port: 3306,
+    storage: 'data.db'
 });
 
 const user = sequelize.define('User',{
