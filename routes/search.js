@@ -15,11 +15,9 @@ let getToken = function (headers) {
     } else {
       return null;
     }
-  };
+};
 
-let userId;
-
-router.post('/github', async (req,res,next)=>{
+  router.post('/add', async (req,res,next)=>{
     passport.authenticate('jwt', {session: false},async (err, user, info) => {
         let token = getToken(req.headers);
     // let authorization = req.headers.authorization;
@@ -29,15 +27,29 @@ router.post('/github', async (req,res,next)=>{
     // });
     // console.log(decode);
     if(token){
-        let  newSearchItem =  await search.build({
-            text: req.body.text,
-            userId: user.dataValues.id,
-            createdOn: Date.now()
-        }).save().catch((err)=>{
+        let item = await search.findOne({
+            where:{
+                text: req.body.text
+            }
+        }).catch((err)=>{
             res.send({success: false, message: 'Server Error'});
-        })
-
-        res.send({success: true, message: 'Item Added!'});
+    });
+    
+        if(item){
+            item.dataValues.createdOn = Date.now();
+            item.save();
+            return res.send({success: true, message: 'Item Already present', item: item});
+        }else{
+            let  newSearchItem =  await search.build({
+                text: req.body.text,
+                userId: user.dataValues.id,
+                createdOn: Date.now()
+            }).save().catch((err)=>{
+                res.send({success: false, message: 'Server Error'});
+            })
+    
+            res.send({success: true, message: 'New Search Added', item: newSearchItem});
+        }
     }else{
         res.send({success: false, message: 'Unauthorized'});
     }
@@ -45,35 +57,36 @@ router.post('/github', async (req,res,next)=>{
     
 })
 
-// router.get('/recentfive', passport.authenticate('jwt',{session:false}), async (req,res)=>{
-//     passport.authenticate('jwt', {session: false},async (err, user, info) => {
-//         let token = getToken(req.headers);
-//     // let authorization = req.headers.authorization;
-//     // let decode;
-//     // decode = jwt.verify(authorization,token).then((user)=>{
-//     //         console.log(user);
-//     // });
-//     // console.log(decode);
-//     if(token){
-//         let items = [];
-//         await search.findAll({
-//             where:{
-//                 userId: user.dataValues.id
-//             },
-//             limit:5
-            
-//         }).then((result)=>{
-//             console.log(result);
-//             items = result;
-//         }).catch((err)=>{
-//             res.send({success: false, message: 'Server Error'});
-//         })
+router.get('/recent/:itemsCount', async (req,res,next)=>{
+    passport.authenticate('jwt', {session: false},async (err, user, info) => {
+        let token = getToken(req.headers);
+    // let authorization = req.headers.authorization;
+    // let decode;
+    // decode = jwt.verify(authorization,token).then((user)=>{
+    //         console.log(user);
+    // });
+    // console.log(decode);
+    if(token){
+        const itemsCount = req.params.itemsCount;
+        await search.findAll({
+            limit: itemsCount,
+            order:[
+                ['createdOn', 'DESC']
+            ],
+            where:{
+                userId: user.dataValues.id
+            }
+        }).then((items)=>{
+            res.send({success: true, items: items});
+        }).catch((err)=>{
+            res.send({success: false, message: "Internal Server Error"});
+        });
+    }else{
+        res.send({success: false, message: 'Unauthorized'});
+    }
+    })(req, res);
+    
+})
 
-//         res.send({success: true, items: items});
-//     }else{
-//         res.send({success: false, message: 'Unauthorized'});
-//     }
-//     })(req, res);
-// })
 
 module.exports = router;

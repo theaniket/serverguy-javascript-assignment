@@ -2,6 +2,7 @@ const router = require('express').Router();
 const user = require('../database-connection').user;
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
+const secret = require('../config').secret;
 
 router.post('/signup',async (req,res)=>{
     const username = req.body.username;
@@ -11,7 +12,7 @@ router.post('/signup',async (req,res)=>{
     if(!username|| !password||!emailId){
         res.send({
             success: false,
-            error: "fields can't be empty" 
+            message: "fields can't be empty" 
         })
     }
 
@@ -24,7 +25,7 @@ router.post('/signup',async (req,res)=>{
         console.log(newUser.dataValues.id);
         res.send({
             success: true,
-            error: null
+            message: 'Please Log In!'
         })
     }
 })
@@ -36,11 +37,11 @@ router.post('/signin', async (req,res)=>{
         }
     }).then((user)=>{
         if(user.password == req.body.password){
-            let token = jwt.sign(user.toJSON(), 'very very secret',{expiresIn: '30m'});
+            let token = jwt.sign(user.toJSON(),secret,{expiresIn: '30m'});
             res.json({success: true, token: 'JWT ' + token});
         }
         else{
-            res.json({success: true, messagee: 'Invalid Password'});
+            res.json({success: false, messagee: 'Invalid Password'});
         }
     }).catch((err)=>{
         res.send({success: false, message: 'Inavlid Credentials'});

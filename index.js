@@ -20,11 +20,6 @@ app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(session({
-    secret: 'Bruce Wayne is Batman',
-    resave: false,
-    saveUninitialized: false,
-}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/user',userRouter);
